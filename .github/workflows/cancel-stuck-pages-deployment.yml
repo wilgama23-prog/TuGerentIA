@@ -1,0 +1,26 @@
+name: Cancelar despliegue de Pages atascado
+
+on:
+  push:
+    branches:
+      - maintenance/cancel-stuck-pages-deployment
+
+permissions:
+  contents: read
+  pages: write
+
+jobs:
+  cancel-stuck-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancelar el despliegue bloqueado de GitHub Pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl --fail-with-body --silent --show-error \
+            --request POST \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer ${GH_TOKEN}" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages/deployments/409d992f3a3947d99b1010977c264330eca4d069/cancel"
