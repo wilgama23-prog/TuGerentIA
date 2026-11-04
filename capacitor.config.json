@@ -1,0 +1,8 @@
+{
+  "appId": "com.wilgama.tugerentia",
+  "appName": "TUgerentIA",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}
