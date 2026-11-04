@@ -89,7 +89,7 @@ function shareRemissionPNG(r,format='png',preview=null){
   lines.push('');lines.push('02 · DATOS DEL CLIENTE');
   add('Cliente',r.client);add('Identificación',r.tax);add('Teléfono',r.phone);add('Dirección',r.address);
   lines.push('');lines.push('03 · PRODUCTOS Y CANTIDADES');
-  (r.items||[]).forEach(it=>lines.push('PRODUCTROW|'+(it.description||'Producto')+'|'+(it.qty||0)+' '+(it.unitType==='dozen'?'docenas':'unidades')+'|'+money(it.price)+'|'+money((Number(it.qty)||0)*(Number(it.price)||0))));
+  (r.items||[]).forEach(it=>lines.push('Producto: '+(it.description||'Producto')+' · Cantidad: '+(it.qty||0)+' '+(it.unitType==='dozen'?'docenas':'unidades')+' · Precio: '+money(it.price)+' · Total: '+money((Number(it.qty)||0)*(Number(it.price)||0))));
   if(!(r.items||[]).length)lines.push('Sin productos registrados');
   lines.push('');lines.push('04 · ENTREGA Y PAGO');
   add('Fecha de entrega',r.date);add('Fecha acordada de pago',r.due);add('Forma de pago',r.method);add('Medio de pago',r.paymentDestination);
