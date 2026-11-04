@@ -15,6 +15,25 @@
 <nav class="nav" aria-label="Navegación"><button data-page="home" class="active"><b>⌂</b><span>Inicio</span></button><button data-page="cuts"><b>✂</b><span>Cortes</span></button><button data-page="people"><b>♧</b><span>Confección</span></button><button data-page="orders"><b>▣</b><span>Pedidos</span></button><button data-page="remissions"><b>▤</b><span>Remisiones</span></button><button data-page="money"><b>$</b><span>Caja y cuentas</span></button><button data-page="receipts"><b>▤</b><span>Comprobantes</span></button><button data-page="agenda"><b>◷</b><span>Agenda</span></button></nav>
 </div>
 <script>
+(function(){
+  function showDiagnostic(title,detail){
+    var old=document.getElementById('tugerentiaDiagnostic');
+    if(old)return;
+    var box=document.createElement('div');
+    box.id='tugerentiaDiagnostic';
+    box.style.cssText='position:fixed;z-index:999999;inset:12px;background:#fff;color:#201c29;border:3px solid #b42318;border-radius:16px;padding:20px;overflow:auto;font:14px/1.5 system-ui;box-shadow:0 10px 40px #0006';
+    var h=document.createElement('h2');h.textContent='TUgerentIA detectó un problema al iniciar';h.style.color='#b42318';box.appendChild(h);
+    var p=document.createElement('p');p.textContent=title;box.appendChild(p);
+    var pre=document.createElement('pre');pre.style.cssText='white-space:pre-wrap;overflow-wrap:anywhere;background:#f4f4f5;padding:12px;border-radius:8px';pre.textContent=detail||'Sin detalle adicional';box.appendChild(pre);
+    var note=document.createElement('p');note.textContent='Esta pantalla de diagnóstico nos ayudará a corregir el fallo. No borres los datos de la aplicación.';box.appendChild(note);
+    document.body.appendChild(box);
+  }
+  window.addEventListener('error',function(e){showDiagnostic('Error de JavaScript',((e.message||'Error desconocido')+'\n'+(e.filename||'')+':'+(e.lineno||'?')+':'+(e.colno||'?')));});
+  window.addEventListener('unhandledrejection',function(e){var r=e.reason;showDiagnostic('Error en una operación de inicio',r&&(r.stack||r.message)||String(r));});
+  window.setTimeout(function(){var m=document.getElementById('main');if(m&&!m.children.length)showDiagnostic('La interfaz no llegó a dibujarse en 10 segundos','El documento HTML abrió, pero la pantalla principal quedó vacía.');},10000);
+})();
+</script>
+<script>
 const KEY='tugerentia_v01_data';let db=load();if(!db.receipts)db.receipts=[];if(!db.remissions)db.remissions=[];if(!db.business)db.business={};if(!db.cuts)db.cuts=[];let page='home';let nextCutNumber=()=>{const nums=db.cuts.map(c=>parseInt(c.number||'',10)).filter(n=>Number.isFinite(n)&&n>0);return String(Math.max(0,...nums)+1).padStart(4,'0')};db.cuts.forEach((c,i)=>{if(!c.number)c.number=String(i+1).padStart(4,'0')});
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{cuts:[],people:[],jobs:[],orders:[],moves:[],tasks:[]}}catch(e){return{cuts:[],people:[],jobs:[],orders:[],moves:[],tasks:[]}}}
 function save(){localStorage.setItem(KEY,JSON.stringify(db))}function id(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}function today(){return new Date().toISOString().slice(0,10)}function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function money(n){return new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0}).format(Number(n)||0)}function date(s){if(!s)return 'Sin fecha';return new Date(s+'T12:00:00').toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'})}function el(q){return document.querySelector(q)}
