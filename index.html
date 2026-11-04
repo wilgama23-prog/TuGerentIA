@@ -15,6 +15,25 @@
 <nav class="nav" aria-label="Navegación"><button data-page="home" class="active"><b>⌂</b><span>Inicio</span></button><button data-page="cuts"><b>✂</b><span>Cortes</span></button><button data-page="people"><b>♧</b><span>Confección</span></button><button data-page="orders"><b>▣</b><span>Pedidos</span></button><button data-page="remissions"><b>▤</b><span>Remisiones</span></button><button data-page="money"><b>$</b><span>Caja y cuentas</span></button><button data-page="receipts"><b>▤</b><span>Comprobantes</span></button><button data-page="agenda"><b>◷</b><span>Agenda</span></button></nav>
 </div>
 <script>
+(function(){
+  function report(kind,message,source,line,column,stack){
+    try{
+      var id='tugerentia-diagnostic-error';
+      var box=document.getElementById(id);
+      if(!box){
+        box=document.createElement('pre');box.id=id;
+        box.style.cssText='position:fixed;z-index:2147483647;inset:8px;overflow:auto;white-space:pre-wrap;word-break:break-word;background:#fff1f1;color:#790000;border:2px solid #c62828;border-radius:12px;padding:14px;font:13px/1.45 monospace;box-shadow:0 4px 30px #0005';
+        (document.body||document.documentElement).appendChild(box);
+      }
+      box.textContent='TUgerentIA | DIAGNÓSTICO PWA\\n'+kind+': '+String(message||'Error sin mensaje')+'\\n'+(source||'')+(line?':'+line+':'+(column||0):'')+'\\n'+(stack||'');
+    }catch(_){}
+  }
+  window.addEventListener('error',function(e){report('ERROR JAVASCRIPT',e.message,e.filename,e.lineno,e.colno,e.error&&e.error.stack)});
+  window.addEventListener('unhandledrejection',function(e){var r=e.reason;report('PROMESA RECHAZADA',r&&r.message||r,'',0,0,r&&r.stack)});
+  window.addEventListener('load',function(){setTimeout(function(){var m=document.getElementById('main');if(m&&!m.innerHTML.trim())report('INICIO BLOQUEADO','El JavaScript cargó, pero la pantalla principal no llegó a dibujarse.','','',0,'Revisar render() y los datos locales.');},8000)});
+})();
+</script>
+<script>
 const KEY='tugerentia_v01_data';let db=load();if(!db.receipts)db.receipts=[];if(!db.remissions)db.remissions=[];if(!db.business)db.business={};if(!db.cuts)db.cuts=[];let page='home';let nextCutNumber=()=>{const nums=db.cuts.map(c=>parseInt(c.number||'',10)).filter(n=>Number.isFinite(n)&&n>0);return String(Math.max(0,...nums)+1).padStart(4,'0')};db.cuts.forEach((c,i)=>{if(!c.number)c.number=String(i+1).padStart(4,'0')});
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{cuts:[],people:[],jobs:[],orders:[],moves:[],tasks:[]}}catch(e){return{cuts:[],people:[],jobs:[],orders:[],moves:[],tasks:[]}}}
 function save(){localStorage.setItem(KEY,JSON.stringify(db))}function id(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}function today(){return new Date().toISOString().slice(0,10)}function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function money(n){return new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0}).format(Number(n)||0)}function date(s){if(!s)return 'Sin fecha';return new Date(s+'T12:00:00').toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'})}function el(q){return document.querySelector(q)}
