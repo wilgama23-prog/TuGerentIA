@@ -188,8 +188,8 @@ function orderWorkCanvas(lines,biz){
  const colors=[];lines.forEach(v=>{const a=v.split('|');if(v.startsWith('DELIVERYCOLOR|'))colors.push({name:a[1],total:a[2],sizes:[]});else if(v.startsWith('DELIVERYROW|')&&colors.length)colors[colors.length-1].sizes.push({size:a[1],qty:a[2]})});
  const sizes=[...new Set(colors.flatMap(v=>v.sizes.map(q=>q.size)))];if(!sizes.length)sizes.push('Única');
  const total=(lines.find(v=>v.startsWith('TOTALENTREGADAS:'))||'TOTALENTREGADAS: 0 UND').split(':').slice(1).join(':').trim();
- const svc=get('Valor total del servicio'),paid=get('Total pagado'),bal=get('Saldo pendiente'),status=(lines.find(v=>v.startsWith('PAYMENTSTATUS|'))||'PAYMENTSTATUS|PENDIENTE').split('|')[1];
- x.fillStyle=P;x.fillRect(0,0,W,132);box(38,12,355,108,20,'#fff',null);t('TUgerentIA',62,55,43,D);t('By WiLGAMA',220,91,20,I,'center');ln(423,12,423,120,'#fff',3);
+ const svc=get('Valor total del servicio'),paid=get('Total pagado'),bal=get('Saldo pendiente'),unit=get('Valor de maquila por unidad')||(Number(get('TOTAL DE PRENDAS ENTREGADAS').replace(/[^0-9]/g,''))?('$ '+Math.round((Number(svc.replace(/[^0-9]/g,''))||0)/(Number(get('TOTAL DE PRENDAS ENTREGADAS').replace(/[^0-9]/g,''))||1)).toLocaleString('es-CO')):'No indicado'),status=(lines.find(v=>v.startsWith('PAYMENTSTATUS|'))||'PAYMENTSTATUS|PENDIENTE').split('|')[1];
+ x.fillStyle=P;x.fillRect(0,0,W,132);box(38,12,355,108,20,'#fff',null);box(53,29,68,70,15,D,null);t('W',87,64,43,'#fff','center',900);t('TUgerentIA',137,55,43,D);t('By WiLGAMA',235,91,20,I,'center');ln(423,12,423,120,'#fff',3);
  box(455,12,145,108,20,'#fff','#e4c4f2');t('LOGO',527,52,28,D,'center');t('DEL NEGOCIO',527,86,15,D,'center');
  t((biz.name||'NOMBRE DE TU EMPRESA').toUpperCase().slice(0,34),628,30,26,'#fff');ln(628,52,1015,52,'#fff',2);t([biz.address,biz.domicile].filter(Boolean).join(' · ')||'Dirección de tu empresa',650,79,18,'#fff');t([biz.phone,biz.whatsapp].filter(Boolean).join(' · ')||'Teléfono de contacto',650,108,20,'#fff');
  x.fillStyle=D;x.fillRect(0,138,W,73);t('ORDEN DE TRABAJO',W/2,176,49,'#fff','center',900);
@@ -204,7 +204,7 @@ function orderWorkCanvas(lines,biz){
  const qy=hy+42+Math.min(colors.length,6)*rh;box(28,qy,998,47,8,L,null);t('TOTAL DE PRENDAS ENTREGADAS',48,qy+24,23);box(820,qy+4,194,39,9,'#e9baf5',null);t(total,917,qy+24,25,D,'center');
  x.save();x.translate(W/2,qy-85);x.rotate(-.12);x.globalAlpha=.12;t('TUgerentIA',0,0,76,D,'center',900);t('By WiLGAMA',0,47,28,D,'center');x.restore();x.globalAlpha=1;
  const py=ty+370;box(25,py,1005,203,17,'#fff');box(26,py,1003,42,15,P,null);t('◉  ESTADO DEL SERVICIO Y PAGOS',55,py+21,26,'#fff');
- const pay=[['Valor de maquila por unidad:',get('Valor de maquila por unidad')||'No indicado'],['Valor total del trabajo:',svc||'$ 0'],['Total pagado:',paid||'$ 0'],['Saldo pendiente:',bal||'$ 0']];
+ const pay=[['Valor de maquila por unidad:',unit],['Valor total del trabajo:',svc||'$ 0'],['Total pagado:',paid||'$ 0'],['Saldo pendiente:',bal||'$ 0']];
  pay.forEach((v,i)=>{const yy=py+66+i*32;if(i===3)box(390,yy-16,250,30,7,'#edc6f7',null);t(v[0],75,yy,21);t(v[1],610,yy,22,i===3?D:I,'right');ln(70,yy+17,645,yy+17,'#eadcf0',1)});
  ln(668,py+52,668,py+190,I,2);x.save();x.translate(830,py+125);x.rotate(-.13);x.lineWidth=4;x.strokeStyle=D;x.strokeRect(-132,-28,264,56);t(status,0,0,24,D,'center');x.restore();
  const oy=py+218;box(25,oy,1005,130,17,'#fff');box(26,oy,1003,41,15,P,null);t('☏  OBSERVACIONES',55,oy+21,26,'#fff');box(38,oy+49,978,69,10,L,null);x.font='italic 800 19px Arial';x.fillStyle=I;x.textAlign='left';x.textBaseline='top';let words=(obs||'Sin observaciones').split(/\s+/),lnw='',yy=oy+64;words.forEach(w=>{if((lnw+' '+w).trim().length>90){x.fillText(lnw,62,yy);yy+=23;lnw=w}else lnw=(lnw+' '+w).trim()});if(lnw)x.fillText(lnw,62,yy);
