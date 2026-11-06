@@ -2,7 +2,7 @@
   "name": "TUgerentIA",
   "short_name": "TUgerentIA",
   "description": "Tu Gerente + IA",
-  "start_url": "./app.html",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#32105f",
