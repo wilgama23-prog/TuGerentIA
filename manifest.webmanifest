@@ -1,16 +1,16 @@
 {
   "name": "TUgerentIA",
   "short_name": "TUgerentIA",
-  "description": "Tu Gerente + IA",
+  "description": "Tu Gerente + Inteligencia Artificial. Tu negocio en buenas manos.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#32105f",
-  "theme_color": "#5b16a5",
+  "background_color": "#E9D9F3",
+  "theme_color": "#5B267F",
   "icons": [
     {
       "src": "./icon-512.png",
-      "sizes": "192x192",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     }
